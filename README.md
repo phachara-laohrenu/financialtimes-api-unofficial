@@ -1,1 +1,1 @@
-# investingcom-api-unofficial
+# financialtimes-api-unofficial
