@@ -31,3 +31,19 @@ def etf_or_fund(sec_name, search_results):
     max_score = max(score.items(), key=operator.itemgetter(1))[0]
 
     return max_score
+
+def filter_by_currency(search_results):
+
+    currencies = ['usd','eur','gbp','aus']
+
+    results = []
+    for currency in currencies:
+        for search in search_results:
+            if search.symbol.split(':')[-1].lower() == currency:
+                results.append(search)
+        
+        if len(results) > 0:
+            break
+    
+    return results
+    
