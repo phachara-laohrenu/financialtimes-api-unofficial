@@ -8,7 +8,8 @@ import operator
 from ftscraper.utils import similar, etf_or_fund
 from ftscraper.search_obj import SearchObj
 
-def search(search, asset_classes=['etf','fund'], country=None):
+
+def search(query, asset_classes=['etf','fund'], country=None):
     """
     Search assets by a given search string.
 
@@ -32,7 +33,7 @@ def search(search, asset_classes=['etf','fund'], country=None):
     asset_class_list = ['etf','fund','equity','index']
 
 
-    if not search or search.isspace():
+    if not query or query.isspace():
         raise ValueError("Please provide a name, partial name or symbol to search.")
 
     url = 'https://markets.ft.com/data/search'
@@ -63,7 +64,7 @@ def search(search, asset_classes=['etf','fund'], country=None):
     for asset_class in asset_classes:
 
         payload = {
-            'query': search,
+            'query': query,
             'country': country,
             'assetClass': asset_class
         }
@@ -81,15 +82,15 @@ def search(search, asset_classes=['etf','fund'], country=None):
             atts = result.findAll(class_='mod-ui-table__cell--text')
             sec_name = atts[0].text
             symbol = atts[1].text
-            similarity_score = similar(search,sec_name)
+            similarity_score = similar(query,sec_name)
             search_object = SearchObj(sec_name=sec_name,symbol=symbol,sec_type=asset_class,similarity_score=similarity_score)
             search_results.append(search_object)
     
-    sec_type = etf_or_fund(search, search_results)
+    sec_type = etf_or_fund(query, search_results)
 
     search_results = [result for result in search_results if result.sec_type == sec_type]
     for i, result in enumerate(search_results):
-        similarity = similar(search,result.sec_name)
+        similarity = similar(query,result.sec_name)
         search_results[i].similarity_score = similarity
 
     return search_results
@@ -150,7 +151,7 @@ def select_fund(search_results, income_treatment='accumulation', currency='usd',
 
     return pick
 
-def search_select_fund(search, country=None, asset_class=None, income_treatment='accumulation', currency='usd',launch_date='oldest'):
+def search_select_fund(query, country=None, asset_class=None, income_treatment='accumulation', currency='usd',launch_date='oldest'):
     """
     Search and pick a fund based on a given criteria.
 
@@ -167,7 +168,7 @@ def search_select_fund(search, country=None, asset_class=None, income_treatment=
     -------
         pick (object) : the selected fund
     """
-    search_results = search(search)
+    search_results = search(query)
     pick = select_fund(search_results)
     return pick
 

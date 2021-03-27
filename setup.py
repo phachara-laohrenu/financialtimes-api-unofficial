@@ -16,7 +16,7 @@ def requirements(filename):
 
 setup(
     name='ftscraper',
-    version='1.0.0',
+    version='1.0.1',
     packages=find_packages(),
     url='https://github.com/phachara-laohrenu/financialtimes-api-unofficial',
     license='MIT License',
