@@ -15,7 +15,7 @@ def requirements(filename):
     return reqs
 
 setup(
-    name='finnomena_api',
+    name='ftscraper',
     version='1.0.0',
     packages=find_packages(),
     url='https://github.com/phachara-laohrenu/financialtimes-api-unofficial',

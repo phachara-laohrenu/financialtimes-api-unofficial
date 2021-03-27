@@ -8,8 +8,6 @@ import operator
 from ftscraper.utils import similar, etf_or_fund
 from ftscraper.search_obj import SearchObj
 
-
-
 def search(search, asset_classes=['etf','fund'], country=None):
     """
     Search assets by a given search string.
