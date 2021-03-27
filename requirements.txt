@@ -4,3 +4,4 @@ fuzzywuzzy
 numpy
 beautifulsoup4
 PyYAML
+python-Levenshtein
