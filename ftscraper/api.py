@@ -177,7 +177,7 @@ def search_select_fund(query, country=None, asset_class=None, income_treatment='
     pick = select_fund(search_results)
     return pick
 
-def get_summary(sec_name, symbol, sec_type=None):
+def get_summary(symbol, sec_name = None, sec_type=None):
     """
     Get summary of the fund
     """
