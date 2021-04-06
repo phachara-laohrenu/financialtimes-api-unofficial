@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import json
 from datetime import date
+import time
 
 
 class SearchObj(object):
@@ -24,7 +25,7 @@ class SearchObj(object):
         """
         Get summary of the fund
         """
-
+        
         url = 'https://markets.ft.com/data/funds/tearsheet/summary'
         payload = {'s': self.symbol}
         page = requests.get(url, params=payload)
@@ -34,10 +35,12 @@ class SearchObj(object):
         atts['income treatment'] = None
         for att in profile.findAll('tr'):
             key = att.find('th').text.lower()
+            if key == 'symbol':
+                continue
             value = att.find('td').text
             atts[key] = value
         
-        atts['xid'] = self.get_idx()
+        atts['xid'] = None
 
         return atts
     

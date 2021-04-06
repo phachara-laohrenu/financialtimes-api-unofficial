@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 from datetime import datetime, date
 import operator
 
-from ftscraper.utils import similar, etf_or_fund
+from ftscraper.utils import similar, etf_or_fund, filter_by_currency
 from ftscraper.search_obj import SearchObj
 
 
@@ -116,6 +116,8 @@ def select_fund(search_results, income_treatment='accumulation', currency='usd',
     income_treatment = income_treatment.capitalize()
     n = 1
 
+    search_results = filter_by_currency(search_results)
+
     fund_list = []
     for i, fund in enumerate(search_results):
         summary = fund.get_summary()
@@ -128,24 +130,25 @@ def select_fund(search_results, income_treatment='accumulation', currency='usd',
 
         fund_list.append(summary)
 
-    
     df = pd.DataFrame(fund_list)
+    if len(df) == 0:
+        raise Exception('Filter results in 0 fund! Please adjust the filter.')
 
     if len(df) <= 2:
         selection = df[df.similarity_score == df.similarity_score.max()]
         selection_index = selection['index'].values[0]
     else:
-        selection = df.loc[(df['income treatment']==income_treatment) & (df['price currency']==currency)]
+        selection = df.loc[(df['income treatment']==income_treatment)]
         if launch_date == 'oldest':
             ascending = True
         elif launch_date == 'newest':
             ascending = False
         selection = selection.sort_values(by='launch date', ascending=ascending)
 
-        selection = selection.iloc[:n]
         selection = selection.to_dict('records')
+        selection = selection[:n]
 
-        selection_index = selection['index'].values[0]
+        selection_index = selection[0]['index']
     
     pick = search_results[selection_index]
 
@@ -171,5 +174,4 @@ def search_select_fund(query, country=None, asset_class=None, income_treatment='
     search_results = search(query)
     pick = select_fund(search_results)
     return pick
-
             
